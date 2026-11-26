@@ -11,7 +11,7 @@ Each preset is a folder, `<group>/<key>/preset.json`, so a thumbnail or example 
 | `cinematic` | Cinematic short presets with shot plans |
 | `b2b` | B2B playbooks with reference slots and allowed models |
 
-The folder name is the preset's `key` and never changes: the app database and the shop both identify a preset by it.
+`catalog.json` lists the groups and the order the app shows the presets in. The folder name is the preset's `key` and never changes: the app database and the shop both identify a preset by it.
 
 Change a preset by pull request, then run `node scripts/validate.mjs`. The Genfeed app pins this repository at a commit and loads the pinned copy into its database, and the shop sync reads the same files, so a merged change reaches both when the pin moves.
 

@@ -4,20 +4,26 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
-const GROUPS = ['studio', 'ad', 'cinematic', 'b2b'];
+const catalog = JSON.parse(readFileSync(path.join(root, 'catalog.json'), 'utf8'));
+const groups = Object.keys(catalog.groups);
 const errors = [];
 const keys = new Set();
 let count = 0;
 
-for (const group of GROUPS) {
-  const groupDir = path.join(root, group);
-  for (const folder of readdirSync(groupDir).sort()) {
-    const dir = path.join(groupDir, folder);
-    if (!statSync(dir).isDirectory()) continue;
+for (const group of groups) {
+  const listed = catalog.groups[group];
+  const folders = readdirSync(path.join(root, group)).filter((name) =>
+    statSync(path.join(root, group, name)).isDirectory()
+  );
+  for (const key of listed) {
+    if (!folders.includes(key)) errors.push(`${group}/${key}: listed in catalog.json but has no folder`);
+  }
+  for (const folder of folders) {
     const label = `${group}/${folder}`;
+    if (!listed.includes(folder)) errors.push(`${label}: has a folder but is not listed in catalog.json`);
     let preset;
     try {
-      preset = JSON.parse(readFileSync(path.join(dir, 'preset.json'), 'utf8'));
+      preset = JSON.parse(readFileSync(path.join(root, group, folder, 'preset.json'), 'utf8'));
     } catch (error) {
       errors.push(`${label}: preset.json is missing or is not valid JSON (${error.message})`);
       continue;
@@ -34,10 +40,14 @@ for (const group of GROUPS) {
   }
 }
 
-for (const group of readdirSync(root)) {
-  if (statSync(path.join(root, group)).isDirectory() && !group.startsWith('.') &&
-    !GROUPS.includes(group) && group !== 'scripts') {
-    errors.push(`${group}: not a known group (${GROUPS.join(', ')})`);
+for (const entry of readdirSync(root)) {
+  if (
+    statSync(path.join(root, entry)).isDirectory() &&
+    !entry.startsWith('.') &&
+    entry !== 'scripts' &&
+    !groups.includes(entry)
+  ) {
+    errors.push(`${entry}: not a group listed in catalog.json`);
   }
 }
 
