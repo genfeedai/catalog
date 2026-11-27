@@ -1,8 +1,18 @@
-# Genfeed presets
+# Genfeed catalog
 
-The public catalogue of Genfeed presets: the starting points the Genfeed app offers for generating images and video, and the free listings in the Genfeed shop.
+The public catalog of the data the Genfeed app builds on: presets, prompts and workflows.
 
-Each preset is a folder, `<group>/<key>/preset.json`, so a thumbnail or example can sit beside it later. Groups:
+| Folder | What it holds |
+| --- | --- |
+| `presets/` | The starting points the Genfeed app offers for generating images and video, and the free listings in the Genfeed shop |
+| `prompts/` | Reusable prompts. Format in [`prompts/README.md`](prompts/README.md) |
+| `workflows/` | Workflows kept as data. Format in [`workflows/README.md`](workflows/README.md) |
+
+Skills are not kept here. They live in [genfeedai/skills](https://github.com/genfeedai/skills).
+
+## Presets
+
+Each preset is a folder, `presets/<group>/<key>/preset.json`, so a thumbnail or example can sit beside it later. Groups:
 
 | Group | What it holds |
 | --- | --- |
@@ -11,8 +21,14 @@ Each preset is a folder, `<group>/<key>/preset.json`, so a thumbnail or example 
 | `cinematic` | Cinematic short presets with shot plans |
 | `b2b` | B2B playbooks with reference slots and allowed models |
 
-`catalog.json` lists the groups and the order the app shows the presets in. The folder name is the preset's `key` and never changes: the app database and the shop both identify a preset by it.
+`presets/catalog.json` lists the groups and the order the app shows the presets in.
 
-Change a preset by pull request, then run `node scripts/validate.mjs`. The Genfeed app pins this repository at a commit and loads the pinned copy into its database, and the shop sync reads the same files, so a merged change reaches both when the pin moves.
+## Keys
+
+In every folder the item's folder name is its `key`, and a key never changes: the app database and the shop identify a preset by it.
+
+## Changes
+
+Change the catalog by pull request, then run `node scripts/validate.mjs`. The Genfeed app pins this repository at a commit and loads the pinned copy into its database, and the shop sync reads the same files, so a merged change reaches both when the pin moves.
 
 Licensed MIT, like [genfeedai/skills](https://github.com/genfeedai/skills).
