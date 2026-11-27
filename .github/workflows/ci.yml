@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   validate:
-    name: Validate presets
+    name: Validate catalog
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -20,5 +20,5 @@ jobs:
         with:
           node-version: '26'
 
-      - name: Validate presets
+      - name: Validate catalog
         run: node scripts/validate.mjs
